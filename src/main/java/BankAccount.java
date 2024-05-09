@@ -1,5 +1,7 @@
 import java.time.LocalDate;
 
+import static java.lang.Math.round;
+
 public class BankAccount {
 
     private String firstName;
@@ -7,13 +9,18 @@ public class BankAccount {
     private LocalDate dateOfBirth;
     private String accountNumber;
     private double balance;
+    private String accountType;
+    private double overdraft;
 
-    public BankAccount(String firstName, String lastName, LocalDate dateOfBirth, String accountNumber) {
+    public BankAccount(String firstName, String lastName, LocalDate dateOfBirth, String accountNumber, String accountType) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.accountNumber = accountNumber;
         this.balance = 0;
+        this.accountType = accountType;
+        this.overdraft = 0;
+
     }
 //    Getters
     public String getFirstName() {
@@ -32,10 +39,20 @@ public class BankAccount {
         return this.accountNumber;
     }
 
-    public Double getBalance() {
+    public double getBalance() {
+        double roundedBalance = round(this.balance);
         return this.balance;
     }
-//    Setters
+
+    public String getAccountType() {
+        return this.accountType;
+    }
+
+    public double getOverdraft() {
+        return this.overdraft;
+    }
+
+    //    Setters
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -52,14 +69,35 @@ public class BankAccount {
         this.accountNumber = accountNumber;
     }
 
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+
 //    Other methods
-    public void deposit(Double amount) {
+    public void deposit(double amount) {
         this.balance += amount;
     }
 
-    public void withdrawal(Double amount) {
-        this.balance = this.balance - amount;
+    public void withdrawal(double amount) {
+        if ((this.balance - amount) < this.overdraft) {
+            System.out.println("Not enough funds");
+        } else {
+            this.balance = this.balance - amount;
+        }
     }
+
+    public void payInterest() {
+        if (this.accountType.equals("Savings")) {
+            this.balance = this.balance*1.1;
+        } else {
+            this.balance = this.balance*1.05;
+        }
+    }
+
+
+
+
 
 
 

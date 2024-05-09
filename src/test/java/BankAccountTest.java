@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BankAccountTest {
 
@@ -12,7 +11,7 @@ public class BankAccountTest {
 
     @BeforeEach
     public void setUp() {
-        bankAccount = new BankAccount("John", "Smith", LocalDate.of(1980,1,1), "12345678");
+        bankAccount = new BankAccount("John", "Smith", LocalDate.of(1980,1,1), "12345678", "Savings");
     }
 //    Testing getters
     @Test
@@ -41,9 +40,22 @@ public class BankAccountTest {
 
     @Test
     public void canGetBalance() {
-        Double result = bankAccount.getBalance();
+        double result = bankAccount.getBalance();
         assertThat(result).isEqualTo(0);
     }
+
+    @Test
+    public void canGetAccountType() {
+        String result = bankAccount.getAccountType();
+        assertThat(result).isEqualTo("Savings");
+    }
+
+    @Test
+    public void canGetOverdraft() {
+        double result = bankAccount.getOverdraft();
+        assertThat(result).isEqualTo(0);
+    }
+
 //    Testing setters
     @Test
     public void canSetFirstName() {
@@ -74,9 +86,16 @@ public class BankAccountTest {
     }
 
     @Test
+    public void canSetAccountType() {
+        bankAccount.setAccountType("Current");
+        String result = bankAccount.getAccountType();
+        assertThat(result).isEqualTo("Current");
+    }
+
+    @Test
     public void canDepositMoney() {
         bankAccount.deposit(100.0);
-        Double result = bankAccount.getBalance();
+        double result = bankAccount.getBalance();
         assertThat(result).isEqualTo(100);
     }
 
@@ -84,9 +103,41 @@ public class BankAccountTest {
     public void canWithdrawMoney() {
         bankAccount.deposit(100.0);
         bankAccount.withdrawal(50.0);
-        Double result = bankAccount.getBalance();
+        double result = bankAccount.getBalance();
         assertThat(result).isEqualTo(50.0);
     }
+
+    @Test
+    public void canPayInterest() {
+        bankAccount.deposit(100.0);
+        bankAccount.payInterest();
+        double result = bankAccount.getBalance();
+        assertThat(result).isEqualTo(110.00000000000001);
+    }
+
+    @Test
+    public void canPayInterestForCurrent() {
+        bankAccount.setAccountType("Current");
+        bankAccount.deposit(100.0);
+        bankAccount.payInterest();
+        double result = bankAccount.getBalance();
+        assertThat(result).isEqualTo(105.0);
+    }
+
+    @Test
+    public void testForOverdraft() {
+        bankAccount.withdrawal(100);
+        String result = "Not enough funds";
+        assertThat(result).isEqualTo("Not enough funds");
+    }
+
+
+
+
+
+
+
+
 
 
 
